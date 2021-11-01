@@ -493,6 +493,7 @@
                     },
                     success: function (data) {
                         if (data.status === 0) {
+                            alert(data.msg)
                             $('#apply').modal('hide');
                             window.location.reload(true);
                         } else {

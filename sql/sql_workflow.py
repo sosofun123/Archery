@@ -19,7 +19,7 @@ from common.utils.extend_json_encoder import ExtendJSONEncoder
 from common.utils.permission import superuser_required
 from sql.engines.models import ReviewResult, ReviewSet
 from sql.notify import notify_for_audit
-from sql.models import ResourceGroup
+from sql.models import ResourceGroup, WorkflowAudit
 from sql.utils.resource_group import user_groups, user_instances
 from sql.utils.tasks import add_sql_schedule, del_schedule
 from sql.utils.sql_review import can_timingtask, can_cancel, can_execute, on_correct_time_period, can_view, can_rollback
@@ -239,8 +239,17 @@ def change_group_submit(request):
     logger.info(f"group:{group}")
     try:
         for workflow_id in workflow_arr:
+            sqlWorkflow = SqlWorkflow.objects.get(id=workflow_id)
+            workflowAudit = WorkflowAudit.objects.get(workflow_id=workflow_id)
             SqlWorkflow(id=workflow_id, group_id=group[0], group_name=group[1]
                          ).save(update_fields=['group_id', 'group_name'])
+            Audit.add_log(audit_id=workflowAudit.audit_id,
+                          operation_type=0,
+                          operation_type_desc='转移分组',
+                          operation_info=f'分组：{sqlWorkflow.group_name} -> {group[1]}',
+                          operator=1,
+                          operator_display='admin'
+                          )
         result = {'status': 0, 'msg': 'ok'}
     except Exception as e:
         logger.error(traceback.format_exc())
