@@ -42,6 +42,11 @@
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 提交SQL
             </button>
+            {% if perms.sql.sql_workflow_change_group %}
+                <button id="btn_changeGroup" type="button" class="btn btn-danger" onclick="changeGroup()" data-toggle="modal" data-target="#groupchange">
+                    转移资源组
+                </button>
+            {% endif %}
         </div>
     </div>
     <!-- 审核列表的表格-->
@@ -66,6 +71,34 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="groupchange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">转移资源组</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" style="display:none;" class="form-control" id="workflow_id" value="" disabled>
+                        <input type="text" class="form-control" id="group_name" value="" disabled
+                               placeholder="组">
+                    </div>
+                    <div class="form-group">
+                        <select id="object_info" name="object_info" data-live-search="true"
+                                class="form-control selectpicker show-tick bs-select-hidden ">
+                            <option value="is-empty" disabled="" selected="selected">请选择关联对象:</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-success" onclick="changeGroupSubmit()">提交</button>
                 </div>
             </div>
         </div>
@@ -185,6 +218,8 @@
                         }
                     },
                 columns: [{
+                    checkbox: true
+                },{
                     title: '工单名称',
                     field: 'workflow_name',
                     formatter: function (value, row, index) {
@@ -261,6 +296,9 @@
                 onSearch: function (e) {
                     //传搜索参数给服务器
                     queryParams(e)
+                },
+                onCheck: function (row,$element) {
+
                 },
                 responseHandler: function (res) {
                     //在ajax获取到数据，渲染表格之前，修改数据源
@@ -353,5 +391,121 @@
         $(document).ready(function () {
             get_workflow_list();
         });
+
+        //转移分组初始化
+        function changeGroup2 () {
+            $("#object_info").empty();
+            var idArrs = [];
+            var groupDict = {};
+            var groupDict = $('#sqlaudit-list').bootstrapTable('getSelections').map(function(index, item) {
+                if(!groupDict[index.group_name]){
+                    var arr = [];
+                    arr.push(index.id);
+                }else{
+                    var arr = groupDict[index.group_name]
+                    arr.push(index.id);
+                }
+                groupDict[index.group_name] = arr;
+                console.log(index.id);
+                console.log(index.group_name);
+                idArrs.push(index.id);
+                return groupDict;
+            });
+            console.log(groupDict);
+            $('#group_name').val(groupDict[0].group_name);
+            $('#object_info').selectpicker('render');
+            $('#object_info').selectpicker('refresh');
+        }
+
+
+        //转移分组初始化
+        function changeGroup () {
+            $.ajax({
+                type: "post",
+                url: "/group/group_all/",
+                dataType: "json",
+                data: {
+                },
+                complete: function () {
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.total > 0) {
+                        var result = data.rows;
+                        $("#object_info").empty();
+                        for (var i = 0; i < result.length; i++) {
+                            var name = "<option value=\"" + result[i]['group_id'] + "," + result[i]['group_name'] + "\">" + result[i]['group_name'] + "</option>";
+                            $("#object_info").append(name);
+                        }
+                        $('#object_info').selectpicker('render');
+                        $('#object_info').selectpicker('refresh');
+                    } else {
+                        alert(data.msg)
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+            $("#object_info").empty();
+            var row = $('#sqlaudit-list').bootstrapTable('getSelections');
+            var group = {};
+            var ids = [];
+            for (let i = 0 ; i < row.length; i++){
+                if(!group[row[i].group_name]){
+                    var arr = [];
+                    arr.push(row[i].id);
+
+                }else{
+                    var arr = group[row[i].group_name];
+                    arr.push(row[i].id);
+                }
+                group[row[i].group_name] = arr;
+                ids.push(row[i].id);
+            }
+            console.log(group);
+            var groupStr = [];
+            $.each(group, function(key){
+                groupStr.push(key);
+            });
+            console.log(groupStr);
+            console.log(ids);
+            $('#group_name').val(groupStr);
+            $('#workflow_id').val(ids);
+        }
+
+        function changeGroupSubmit () {
+            var idsArr = $("#workflow_id").val();
+            var group = $("#object_info option:selected").val();
+            console.log(group);
+            if (idsArr && group) {
+                $.ajax({
+                    type: "post",
+                    url: "/group/change_group_submit/",
+                    dataType: "json",
+                    data: {
+                        ids_arr: idsArr,
+                        group: group
+                    },
+                    complete: function () {
+                        $('button[type=button]').removeClass('disabled');
+                        $('button[type=button]').prop('disabled', false);
+                    },
+                    success: function (data) {
+                        if (data.status === 0) {
+                            $('#apply').modal('hide');
+                            window.location.reload(true);
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            } else {
+                alert('请勾选需要转移分组的工单！')
+            }
+        }
     </script>
 {% endblock %}

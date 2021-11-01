@@ -16,6 +16,7 @@ from django.utils import timezone
 from common.config import SysConfig
 from common.utils.const import Const, WorkflowDict
 from common.utils.extend_json_encoder import ExtendJSONEncoder
+from common.utils.permission import superuser_required
 from sql.engines.models import ReviewResult, ReviewSet
 from sql.notify import notify_for_audit
 from sql.models import ResourceGroup
@@ -25,6 +26,7 @@ from sql.utils.sql_review import can_timingtask, can_cancel, can_execute, on_cor
 from sql.utils.workflow_audit import Audit
 from .models import SqlWorkflow, SqlWorkflowContent, Instance
 from django_q.tasks import async_task
+
 
 from sql.engines import get_engine
 
@@ -228,6 +230,22 @@ def submit(request):
                        task_name=f'sqlreview-submit-{workflow_id}')
 
     return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+
+@permission_required('sql.sql_workflow_change_group', raise_exception=True)
+def change_group_submit(request):
+    workflow_arr = request.POST.get('ids_arr').split(',')
+    logger.info(f"id数组:{workflow_arr}")
+    group = request.POST.get('group').split(',')
+    logger.info(f"group:{group}")
+    try:
+        for workflow_id in workflow_arr:
+            SqlWorkflow(id=workflow_id, group_id=group[0], group_name=group[1]
+                         ).save(update_fields=['group_id', 'group_name'])
+        result = {'status': 0, 'msg': 'ok'}
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        result = {'status': 1, 'msg': str(e)}
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 def detail_content(request):

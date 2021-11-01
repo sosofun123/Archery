@@ -38,6 +38,25 @@ def group(request):
                         content_type='application/json')
 
 
+@superuser_required
+def group_all(request):
+    """获取资源组列表"""
+    search = request.POST.get('search', '')
+
+    # 过滤搜索条件
+    group_obj = ResourceGroup.objects.filter(group_name__icontains=search, is_deleted=0)
+    group_count = group_obj.count()
+    group_list = group_obj[::].values("group_id", "group_name", "ding_webhook")
+
+    # QuerySet 序列化
+    rows = [row for row in group_list]
+
+    result = {"total": group_count, "rows": rows}
+    # 返回查询结果
+    return HttpResponse(json.dumps(result, cls=ExtendJSONEncoder, bigint_as_string=True),
+                        content_type='application/json')
+
+
 def associated_objects(request):
     """
     获取资源组已关联对象信息
@@ -176,6 +195,8 @@ def addrelation(request):
         logger.error(traceback.format_exc())
         result = {'status': 1, 'msg': str(e)}
     return HttpResponse(json.dumps(result), content_type='application/json')
+
+
 
 
 def auditors(request):

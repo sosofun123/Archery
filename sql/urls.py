@@ -17,6 +17,7 @@ urlpatterns = [
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('index/', views.index),
     path('login/', views.login, name='login'),
+    path('sislogin/', views.sislogin, name='sislogin'),
     path('logout/', auth.sign_out),
     path('signup/', auth.sign_up),
     path('sqlworkflow/', views.sqlworkflow),
@@ -58,6 +59,7 @@ urlpatterns = [
 
     path('authenticate/', auth.authenticate_entry),
     path('sqlworkflow_list/', sql_workflow.sql_workflow_list),
+path('group/change_group_submit/', sql_workflow.change_group_submit),
     path('sqlworkflow/detail_content/', sql_workflow.detail_content),
     path('sqlworkflow/backup_sql/', sql_workflow.backup_sql),
     path('simplecheck/', sql_workflow.check),
@@ -78,6 +80,7 @@ urlpatterns = [
     path('check/instance/', check.instance),
 
     path('group/group/', resource_group.group),
+    path('group/group_all/', resource_group.group_all),
     path('group/addrelation/', resource_group.addrelation),
     path('group/relations/', resource_group.associated_objects),
     path('group/instances/', resource_group.instances),
