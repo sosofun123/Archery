@@ -114,11 +114,14 @@
     <script>
         // 初始化时间控件
         $(function () {
-            let start = moment().subtract(29, 'days');
+            let start = moment().subtract(89, 'days');
             let end = moment();
+            // 暂时先不放开查全部
+           // let start = null;
+           // let end = null;
 
             function cb(start, end) {
-                if (start.isValid() && end.isValid()) {
+                if (start !=null && end !=null && start.isValid() && end.isValid()) {
                     $('#reservation span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
                 } else {
                     $('#reservation span').html('全部数据');
