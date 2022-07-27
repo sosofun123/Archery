@@ -229,7 +229,7 @@ def submit(request):
             async_task(notify_for_audit, audit_id=audit_id, cc_users=cc_users, timeout=60,
                        task_name=f'sqlreview-submit-{workflow_id}')
 
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 @permission_required('sql.sql_workflow_change_group', raise_exception=True)
 def change_group_submit(request):
@@ -348,7 +348,7 @@ def alter_run_date(request):
         context = {'errMsg': msg}
         return render(request, 'error.html', context)
 
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 
 @permission_required('sql.sql_review', raise_exception=True)
@@ -391,7 +391,7 @@ def passed(request):
         async_task(notify_for_audit, audit_id=audit_id, audit_remark=audit_remark, timeout=60,
                    task_name=f'sqlreview-pass-{workflow_id}')
 
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 
 def execute(request):
@@ -404,6 +404,7 @@ def execute(request):
     if not (request.user.has_perm('sql.sql_execute') or request.user.has_perm('sql.sql_execute_for_resource_group')):
         raise PermissionDenied
     workflow_id = int(request.POST.get('workflow_id', 0))
+    instance_ids = request.POST.get('instance_ids').split(',')
     if workflow_id == 0:
         context = {'errMsg': 'workflow_id参数为空.'}
         return render(request, 'error.html', context)
@@ -427,10 +428,16 @@ def execute(request):
         # 删除定时执行任务
         schedule_name = f"sqlreview-timing-{workflow_id}"
         del_schedule(schedule_name)
-        # 加入执行队列
-        async_task('sql.utils.execute_sql.execute', workflow_id, request.user,
-                   hook='sql.utils.execute_sql.execute_callback',
-                   timeout=-1, task_name=f'sqlreview-execute-{workflow_id}')
+        if len(instance_ids) > 1:
+            # 加入多实例执行队列
+            async_task('sql.utils.execute_sql.multiple_instance_execute', workflow_id, request.user, instance_ids,
+                       hook='sql.utils.execute_sql.execute_callback',
+                       timeout=-1, task_name=f'sqlreview-execute-{workflow_id}')
+        else:
+            # 加入执行队列
+            async_task('sql.utils.execute_sql.execute', workflow_id, request.user,
+                       hook='sql.utils.execute_sql.execute_callback',
+                       timeout=-1, task_name=f'sqlreview-execute-{workflow_id}')
         # 增加工单日志
         Audit.add_log(audit_id=audit_id,
                       operation_type=5,
@@ -451,7 +458,7 @@ def execute(request):
                       operation_info='确认手工执行结束',
                       operator=request.user.username,
                       operator_display=request.user.display)
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 
 def timing_task(request):
@@ -507,7 +514,7 @@ def timing_task(request):
         logger.error(f"定时执行工单报错，错误信息：{traceback.format_exc()}")
         context = {'errMsg': msg}
         return render(request, 'error.html', context)
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 
 def cancel(request):
@@ -589,7 +596,7 @@ def cancel(request):
                 WorkflowDict.workflow_status['audit_abort'], WorkflowDict.workflow_status['audit_reject']):
             async_task(notify_for_audit, audit_id=audit_detail.audit_id, audit_remark=audit_remark, timeout=60,
                        task_name=f'sqlreview-cancel-{workflow_id}')
-    return HttpResponseRedirect(reverse('sql:detail', args=(workflow_id,)))
+    return HttpResponseRedirect(('/archery/detail/'+str(workflow_id)+'/'))
 
 
 def get_workflow_status(request):

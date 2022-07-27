@@ -940,7 +940,7 @@
 
             $.ajax({
                 type: "post",
-                url: "/config/change/",
+                url: "/archery/config/change/",
                 dataType: "json",
                 data: {
                     configs: JSON.stringify(configs)
@@ -999,7 +999,7 @@
             if ($("#group").val()) {
                 $.ajax({
                     type: "post",
-                    url: "/group/auditors/",
+                    url: "/archery/group/auditors/",
                     dataType: "json",
                     data: {
                         group_name: $("#group").val(),
@@ -1031,7 +1031,7 @@
                 var audit_auth_groups = $("#workflow_auditors_text").val().replace(/->/g, ",");
                 $.ajax({
                     type: "post",
-                    url: "/group/changeauditors/",
+                    url: "/archery/group/changeauditors/",
                     dataType: "json",
                     data: {
                         group_name: $("#group").val(),
@@ -1066,7 +1066,7 @@
             $(this).prop('disabled', true);
             $.ajax({
                 type: "post",
-                url: "/check/inception/",
+                url: "/archery/check/inception/",
                 dataType: "json",
                 data: {
                     inception_host: $("#inception_host").val(),
@@ -1099,7 +1099,7 @@
             $(this).prop('disabled', true);
             $.ajax({
                 type: "post",
-                url: "/check/go_inception/",
+                url: "/archery/check/go_inception/",
                 dataType: "json",
                 data: {
                     go_inception_host: $("#go_inception_host").val(),
@@ -1132,7 +1132,7 @@
             $(this).prop('disabled', true);
             $.ajax({
                 type: "post",
-                url: "/check/email/",
+                url: "/archery/check/email/",
                 dataType: "json",
                 data: {
                     mail: $("#mail").val(),
@@ -1175,7 +1175,7 @@
             $(this).prop('disabled', true);
             $.ajax({
                 type: "post",
-                url: "/4admin/sync_ding_user/",
+                url: "/archery/4admin/sync_ding_user/",
                 dataType: "json",
                 data: {},
                 complete: function () {

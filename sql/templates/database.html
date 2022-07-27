@@ -148,7 +148,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/instance/database/list/",
+                url: "/archery/instance/database/list/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -266,7 +266,7 @@
             } else {
                 $.ajax({
                     type: "post",
-                    url: "/instance/database/create/",
+                    url: "/archery/instance/database/create/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -309,7 +309,7 @@
             $("#btnEditDb").unbind("click").click(function () {
                 $.ajax({
                     type: "post",
-                    url: "/instance/database/edit/",
+                    url: "/archery/instance/database/edit/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -342,7 +342,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         db_type: ['mysql']

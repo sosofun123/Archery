@@ -5,7 +5,7 @@
     &nbsp;&nbsp;&nbsp;
     <!--只允许发起人提交其他实例-->
     {% if user.username == workflow_detail.engineer %}
-        <a type='button' id="btnSubmitOtherCluster" class='btn btn-warning' href="/submitotherinstance/">上线其他实例</a>
+        <a type='button' id="btnSubmitOtherCluster" class='btn btn-warning' href="/archery/submitotherinstance/">上线其他实例</a>
     {% endif %}
     <input type="hidden" id="sqlMaxRowNumber" value="{{ rows|length }}">
     <input type="hidden" id="editSqlContent" value="{{ workflow_detail.sql_content }}"/>
@@ -137,14 +137,14 @@
             <textarea id="remark" name="remark" class="form-control" data-name="审核备注"
                       placeholder="请填写审核备注" rows=3></textarea>
             <br>
-            <form action="/query/privaudit/" method="post" style="display:inline-block;">
+            <form action="/archery/query/privaudit/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="apply_id" value="{{ workflow_detail.apply_id }}">
                 <input type="hidden" id="audit_status" name="audit_status" value="1">
                 <input type="submit" id="btnPass" onclick="loading(this)" class="btn btn-success" value="审核通过"/>
             </form>
 
-            <form id="form-cancel" action="/query/privaudit/" method="post" style="display:inline-block;">
+            <form id="form-cancel" action="/archery/query/privaudit/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="apply_id" value="{{ workflow_detail.apply_id }}">
                 <input type="hidden" id="audit_status" name="audit_status" value="2">

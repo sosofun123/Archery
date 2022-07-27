@@ -1049,7 +1049,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/instance/user/list",
+                url: "/archery/instance/user/list",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -1157,7 +1157,7 @@
         function db_list() {
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_id: $("#instance").val(),
@@ -1191,7 +1191,7 @@
         function tb_list() {
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_id: $("#instance").val(),
@@ -1226,7 +1226,7 @@
         function col_list() {
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_id: $("#instance").val(),
@@ -1301,7 +1301,7 @@
             } else {
                 $.ajax({
                     type: "post",
-                    url: "/instance/user/create/",
+                    url: "/archery/instance/user/create/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -1346,7 +1346,7 @@
             $("#resetEditBtn").unbind("click").click(function () {
                 $.ajax({
                     type: "post",
-                    url: "/instance/user/edit/",
+                    url: "/archery/instance/user/edit/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -1426,7 +1426,7 @@
                 };
                 $.ajax({
                     type: "post",
-                    url: "/instance/user/grant/",
+                    url: "/archery/instance/user/grant/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -1472,7 +1472,7 @@
             $("#resetPwdBtn").unbind("click").click(function () {
                 $.ajax({
                     type: "post",
-                    url: "/instance/user/reset_pwd/",
+                    url: "/archery/instance/user/reset_pwd/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -1512,7 +1512,7 @@
             $("#deleteBtn").unbind("click").click(function () {
                 $.ajax({
                     type: "post",
-                    url: "/instance/user/delete/",
+                    url: "/archery/instance/user/delete/",
                     dataType: "json",
                     data: {
                         instance_id: $("#instance").val(),
@@ -1546,7 +1546,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         db_type: ['mysql']

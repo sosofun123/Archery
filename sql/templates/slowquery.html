@@ -126,7 +126,7 @@
             //将数据通过ajax提交给获取db_name
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name option:selected").text(),
@@ -181,7 +181,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         db_type: ['mysql']
@@ -263,7 +263,7 @@
                     sessionStorage.setItem('advisor_sql_content', advisor_sql_content);
                     sessionStorage.setItem('advisor_db_name', advisor_db_name);
                     sessionStorage.setItem('advisor_instance_name', advisor_instance_name);
-                    location.href = '/slowquery_advisor/';
+                    location.href = '/archery/slowquery_advisor/';
                 } else {
                     alert("请先选择需要优化的sql")
                 }
@@ -282,7 +282,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/slowquery/review/",
+                    url: "/archery/slowquery/review/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
@@ -346,7 +346,7 @@
                         });
                         $.ajax({
                             type: "get",
-                            url: "/slowquery/report/",
+                            url: "/archery/slowquery/report/",
                             async: false,
                             dataType: "json",
                             data: {
@@ -451,7 +451,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/slowquery/review_history/",
+                    url: "/archery/slowquery/review_history/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）

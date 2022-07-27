@@ -8,7 +8,7 @@ import sql.query_privileges
 import sql.sql_optimize
 from common import auth, config, workflow, dashboard, check
 from sql import views, sql_workflow, sql_analyze, query, slowlog, instance, instance_account, db_diagnostic, \
-    resource_group, binlog, data_dictionary, archiver
+    resource_group, binlog, data_dictionary, archiver, sql_export
 from sql.utils import tasks
 from common.utils import ding_api
 
@@ -33,6 +33,7 @@ urlpatterns = [
     path('cancel/', sql_workflow.cancel),
     path('rollback/', views.rollback),
     path('sqlanalyze/', views.sqlanalyze),
+    path('sqlexport/', views.sqlexport, name='export'),
     path('sqlquery/', views.sqlquery),
     path('slowquery/', views.slowquery),
     path('sqladvisor/', views.sqladvisor),
@@ -57,9 +58,14 @@ urlpatterns = [
     path('archive/<int:id>/', views.archive_detail, name='archive_detail'),
     path('config/', views.config),
 
+    path('export/commit/', sql_export.commit),
+    path('export/export/', sql_export.export),
+    path('export/export_workflow_list/', sql_export.export_workflow_list),
+    path('export/notexport_workflow_list/', sql_export.notexport_workflow_list),
+
     path('authenticate/', auth.authenticate_entry),
     path('sqlworkflow_list/', sql_workflow.sql_workflow_list),
-path('group/change_group_submit/', sql_workflow.change_group_submit),
+    path('group/change_group_submit/', sql_workflow.change_group_submit),
     path('sqlworkflow/detail_content/', sql_workflow.detail_content),
     path('sqlworkflow/backup_sql/', sql_workflow.backup_sql),
     path('simplecheck/', sql_workflow.check),

@@ -3,7 +3,7 @@
 {% block content %}
     <!-- 自定义操作按钮-->
     <div id="toolbar" class="btn-group right">
-        <a type='button' id="btnSubmitRollback" class="btn btn-warning" href="/editsql/">提交回滚请求</a>
+        <a type='button' id="btnSubmitRollback" class="btn btn-warning" href="/archery/editsql/">提交回滚请求</a>
     </div>
     <table id="tb-rollback" data-toggle="table" class="table table-condensed"
            style="table-layout:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></table>
@@ -18,7 +18,7 @@
             escape: true,
             method: 'get',
             contentType: "application/x-www-form-urlencoded",
-            url: "/sqlworkflow/backup_sql/",
+            url: "/archery/sqlworkflow/backup_sql/",
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）

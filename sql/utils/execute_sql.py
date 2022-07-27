@@ -4,11 +4,40 @@ from django.db import close_old_connections, connection, transaction
 from django_redis import get_redis_connection
 from common.utils.const import WorkflowDict
 from sql.engines.models import ReviewResult, ReviewSet
-from sql.models import SqlWorkflow
+from sql.models import SqlWorkflow, Instance
 from sql.notify import notify_for_execute
 from sql.utils.workflow_audit import Audit
 from sql.engines import get_engine
 
+def multiple_instance_execute(workflow_id, user=None, instance_ids=None):
+    """为延时或异步任务准备的execute, 传入工单ID和执行人信息"""
+    # 使用当前读防止重复执行
+    with transaction.atomic():
+        workflow_detail = SqlWorkflow.objects.select_for_update().get(id=workflow_id)
+        # 只有排队中和定时执行的数据才可以继续执行，否则直接抛错
+        if workflow_detail.status not in ['workflow_queuing', 'workflow_timingtask']:
+            raise Exception('工单状态不正确，禁止执行！')
+        # 将工单状态修改为执行中
+        else:
+            SqlWorkflow(id=workflow_id, status='workflow_executing').save(update_fields=['status'])
+    # 增加执行日志
+    audit_id = Audit.detail_by_workflow_id(workflow_id=workflow_id,
+                                           workflow_type=WorkflowDict.workflow_type['sqlreview']).audit_id
+    # 此处遍历实例列表，依次执行脚本
+    multiple_execute_result = None
+    for instance_id in instance_ids:
+        instance = Instance.objects.get(id=int(instance_id))
+        Audit.add_log(audit_id=audit_id,
+                      operation_type=5,
+                      operation_type_desc='执行工单',
+                      operation_info=f'工单开始执行{instance.instance_name}' if user else '系统定时执行工单',
+                      operator=user.username if user else '',
+                      operator_display=user.display if user else '系统'
+                      )
+        execute_engine = get_engine(instance=instance)
+        workflow_detail.instance = instance
+        multiple_execute_result = execute_engine.execute_workflow(workflow=workflow_detail)
+    return multiple_execute_result
 
 def execute(workflow_id, user=None):
     """为延时或异步任务准备的execute, 传入工单ID和执行人信息"""

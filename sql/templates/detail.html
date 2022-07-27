@@ -9,10 +9,10 @@
         </h4>
         <!--只允许发起人提交其他实例-->
         {% if user.username == workflow_detail.engineer %}
-            <a type='button' id="btnSubmitOtherCluster" class='btn btn-warning' href="/submitotherinstance/">上线其他实例</a>
+            <a type='button' id="btnSubmitOtherCluster" class='btn btn-warning' href="/archery/submitotherinstance/">上线其他实例</a>
         {% endif %}
         {% if is_can_review or is_can_execute or is_can_rollback or user.is_superuser %}
-            <a type='button' id="btnViewSql" class='btn btn-default' onclick="loading(this)" href="/editsql/">查看提交信息</a>
+            <a type='button' id="btnViewSql" class='btn btn-default' onclick="loading(this)" href="/archery/editsql/">查看提交信息</a>
         {% endif %}
     </div>
     <input type="hidden" id="sqlMaxRowNumber" value="{{ rows|length }}">
@@ -166,7 +166,34 @@
             </table>
         </div>
     </div>
-
+    <!-- 多选实例遮罩层 -->
+    <!-- 日志信息-->
+    <div class="modal fade" id="multipleInstanceModal">
+        <div class="modal-dialog">
+            <div class="modal-content message_align">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                    <h4 class="modal-title text-danger">多选实例</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select id="instance" class="form-control selectpicker">
+                            {% for ins in instance %}
+                                {% ifnotequal ins.id workflow_detail.instance.id%}
+                                <option value="{{ ins.id }}">{{ ins.instance_name }}</option>
+                                {% endifnotequal %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="submit_btn">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--审核备注输入框-->
     {% if is_can_review or is_can_cancel %}
         <textarea id="remark" name="remark" class="form-control" data-name="审核备注"
@@ -175,7 +202,7 @@
     {% endif %}
     <!--审核人修改可执行时间按钮-->
     {% if is_can_review %}
-        <form id="from-passed" action="/passed/" method="post" style="display:inline-block;">
+        <form id="from-passed" action="/archery/passed/" method="post" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
             <input type="hidden" id="audit_remark" name="audit_remark" value="">
@@ -185,7 +212,7 @@
     {% endif %}
     <!--审核通过按钮-->
     {% if is_can_review %}
-        <form id="from-passed" action="/passed/" method="post" style="display:inline-block;">
+        <form id="from-passed" action="/archery/passed/" method="post" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
             <input type="hidden" id="audit_remark" name="audit_remark" value="">
@@ -194,15 +221,16 @@
     {% endif %}
     <!--立即执行按钮-->
     {% if is_can_execute %}
-        <form id="from-execute" action="/execute/" method="post" style="display:inline-block;">
+        <form id="from-execute" action="/archery/execute/" method="post" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="mode" value="auto">
             <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
+            <input type="hidden" name="instance_ids" id="instance_ids">
             <input type="button" id="btnExecuteOnly" class="btn btn-danger"
                    value="立即执行"/>
         </form>
         {% if manual %}
-            <form id="from-execute-manual" action="/execute/" method="post" style="display:inline-block;">
+            <form id="from-execute-manual" action="/archery/execute/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="mode" value="manual">
                 <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
@@ -221,7 +249,7 @@
     {% endif %}
     <!--终止执行按钮-->
     {% if is_can_review or is_can_cancel %}
-        <form id="form-cancel" action="/cancel/" method="post" style="display:inline-block;">
+        <form id="form-cancel" action="/archery/cancel/" method="post" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
             <input type="hidden" id="cancel_remark" name="cancel_remark" value="">
@@ -231,13 +259,13 @@
     <!--查看回滚按钮-->
     {% if is_can_rollback %}
         {% if  workflow_detail.status == 'workflow_finish' or  workflow_detail.status == 'workflow_exception' %}
-            <form action="/rollback/" method="get" style="display:inline-block;">
+            <form action="/archery/rollback/" method="get" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
                 <input type="submit" id="btnRollback" onclick="loading(this)" class="btn btn-default"
                        value="查看回滚SQL"/>
             </form>
-            <form action="/rollback/" method="get" style="display:inline-block;">
+            <form action="/archery/rollback/" method="get" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="workflow_id" value="{{ workflow_detail.id }}">
                 <input type="hidden" name="download" value="true">
@@ -252,12 +280,12 @@
             <!--只允许发起人修改工单-->
             {% csrf_token %}
             <a type='button' id="btnEditSql" onclick="loading(this)" class='btn btn-default'
-               href="/editsql/">重新修改</a>
+               href="/archery/editsql/">重新修改</a>
         {% endif %}
     {% endif %}
 
     <!-- 定时执行弹出框 -->
-    <form id="from-addsqlcronjob" action="/timingtask/" method="post" style="display:inline-block;">
+    <form id="from-addsqlcronjob" action="/archery/timingtask/" method="post" style="display:inline-block;">
         <div class="modal fade" id="cronComfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -317,7 +345,7 @@
         </div>
     </div>
     <!-- 修改可执行时间弹出框 -->
-    <form id="from-alterexecutabletime" action="/alter_run_date/" method="post" style="display:inline-block;">
+    <form id="from-alterexecutabletime" action="/archery/alter_run_date/" method="post" style="display:inline-block;">
         <div class="modal fade" id="Executabletime" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -458,8 +486,31 @@
             sessionStorage.setItem('editIsbackup', editIsbackup);
         });
 
-        // 执行确认
+        // 根据资源组内实例数量决定是否多选实例
         $("#btnExecuteOnly").click(function () {
+            instance_len = "{{ instance|length }}"
+            console.log("{{ instance|length }}")
+            //组内多个实例进行实例多选
+            if (instance_len>1){
+                $('#multipleInstanceModal').modal('show');
+            }else{//组内单实例立即执行
+                if ("{{ workflow_detail.is_backup }}" === 'False') {
+                var isContinue = confirm("该工单未选择备份，将不会自动备份数据，请确认是否立即执行？");
+                } else {
+                    var isContinue = confirm("请确认是否立即执行？");
+                }
+                var formExecuteOnly = $("#from-execute");
+                if (isContinue) {
+                    formExecuteOnly.submit();
+                    loading(this)
+                }
+            }
+        });
+
+        // 执行确认
+        $("#submit_btn").click(function () {
+            instance = $("#instance option:selected").val()
+            $("#instance_ids").val("{{workflow_detail.instance.id}}"+","+instance)
             if ("{{ workflow_detail.is_backup }}" === 'False') {
                 var isContinue = confirm("该工单未选择备份，将不会自动备份数据，请确认是否立即执行？");
             } else {
@@ -540,7 +591,7 @@
                 escape: true,
                 method: 'get',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/sqlworkflow/detail_content/",
+                url: "/archery/sqlworkflow/detail_content/",
                 striped: true,                      //是否显示行间隔色
                 cache: true,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -685,7 +736,7 @@
         function get_logs() {
             $.ajax({
                 type: "post",
-                url: "/workflow/log/",
+                url: "/archery/workflow/log/",
                 dataType: "json",
                 data: {
                     workflow_id: "{{ workflow_detail.id }}",
@@ -750,7 +801,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/inception/osc_control/",
+                url: "/archery/inception/osc_control/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: false,                   //是否显示分页（*）
@@ -874,7 +925,7 @@
                     //发送请求
                     $.ajax({
                         type: "post",
-                        url: "/inception/osc_control/",
+                        url: "/archery/inception/osc_control/",
                         dataType: "json",
                         data: {
                             sqlsha1: sqlsha1,
@@ -931,7 +982,7 @@
                 $.ajax({
                     type: "post",
                     async: false,
-                    url: "/getWorkflowStatus/",
+                    url: "/archery/getWorkflowStatus/",
                     dataType: "json",
                     data: {
                         workflow_id: workflow_id

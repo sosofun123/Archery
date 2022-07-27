@@ -20,7 +20,7 @@ from sql.engines.models import ReviewResult, ReviewSet
 from sql.utils.tasks import task_info
 
 from .models import Users, SqlWorkflow, QueryPrivileges, ResourceGroup, \
-    QueryPrivilegesApply, Config, SQL_WORKFLOW_CHOICES, InstanceTag, Instance, QueryLog, ArchiveConfig
+    QueryPrivilegesApply, Config, SQL_WORKFLOW_CHOICES, InstanceTag, Instance, QueryLog, ArchiveConfig, ExportEnv
 from sql.utils.workflow_audit import Audit
 from sql.utils.sql_review import can_execute, can_timingtask, can_cancel, can_view, can_rollback
 from common.utils.const import Const, WorkflowDict
@@ -32,7 +32,7 @@ logger = logging.getLogger('default')
 
 
 def index(request):
-    index_path_url = SysConfig().get('index_path_url', 'sqlworkflow')
+    index_path_url = SysConfig().get('index_path_url', 'archery/sqlworkflow')
     return HttpResponseRedirect(f"/{index_path_url.strip('/')}/")
 
 
@@ -42,6 +42,12 @@ def login(request):
         return HttpResponseRedirect('/')
 
     return render(request, 'login.html', context={'sign_up_enabled': SysConfig().get('sign_up_enabled')})
+
+def sislogin(request):
+    """sis登录页面"""
+    print("#################")
+    return HttpResponseRedirect(settings.AUTH_URL)
+
 
 
 @permission_required('sql.menu_dashboard', raise_exception=True)
@@ -101,6 +107,9 @@ def submit_sql(request):
 def detail(request, workflow_id):
     """展示SQL工单详细页面"""
     workflow_detail = get_object_or_404(SqlWorkflow, pk=workflow_id)
+    # 获取工单所属组关联实例数据
+    group = ResourceGroup.objects.get(group_id=workflow_detail.group_id)
+    instances = group.instance_set.all()
     if not can_view(request.user, workflow_id):
         raise PermissionDenied
     # 自动审批不通过的不需要获取下列信息
@@ -158,7 +167,7 @@ def detail(request, workflow_id):
     # 获取是否开启手工执行确认
     manual = SysConfig().get('manual')
 
-    context = {'workflow_detail': workflow_detail, 'last_operation_info': last_operation_info,
+    context = {'instance': instances, 'workflow_detail': workflow_detail, 'last_operation_info': last_operation_info,
                'is_can_review': is_can_review, 'is_can_execute': is_can_execute, 'is_can_timingtask': is_can_timingtask,
                'is_can_cancel': is_can_cancel, 'is_can_rollback': is_can_rollback, 'audit_auth_group': audit_auth_group,
                'manual': manual, 'current_audit_auth_group': current_audit_auth_group, 'run_date': run_date}
@@ -210,6 +219,32 @@ def sqlanalyze(request):
     """SQL分析页面"""
     return render(request, 'sqlanalyze.html')
 
+@permission_required('sql.menu_sqlexport', raise_exception=True)
+def sqlexport(request):
+    """SQL上线工单列表页面"""
+    user = request.user
+    # 过滤筛选项的数据
+    filter_dict = dict()
+    # 管理员，可查看所有工单
+    if user.is_superuser:
+        pass
+    # 非管理员，拥有审核权限、资源组粒度执行权限的，可以查看组内所有工单
+    elif user.has_perm('sql.sql_review') or user.has_perm('sql.sql_execute_for_resource_group'):
+        # 先获取用户所在资源组列表
+        group_list = user_groups(user)
+        group_ids = [group.group_id for group in group_list]
+        filter_dict['group_id__in'] = group_ids
+    # 其他人只能查看自己提交的工单
+    else:
+        filter_dict['engineer'] = user.username
+    instance_id = SqlWorkflow.objects.filter(**filter_dict).values('instance_id').distinct()
+    instance = Instance.objects.filter(pk__in=instance_id)
+    resource_group_id = SqlWorkflow.objects.filter(**filter_dict).values('group_id').distinct()
+    resource_group = ResourceGroup.objects.filter(group_id__in=resource_group_id)
+    exportEnvAll = ExportEnv.objects.all()
+    return render(request, 'sqlexport.html',
+                  {'status_list': SQL_WORKFLOW_CHOICES,
+                   'instance': instance, 'resource_group': resource_group,'exportEnv_list':exportEnvAll})
 
 @permission_required('sql.menu_query', raise_exception=True)
 def sqlquery(request):

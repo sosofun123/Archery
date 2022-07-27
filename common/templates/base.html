@@ -23,7 +23,7 @@
     }
     </style>
     <!-- django i18n -->
-    <script type="text/javascript" src="{% url 'sql:javascript-catalog' %}"></script>
+    <script type="text/javascript" src="/archery/jsi18n/"></script>
 </head>
 <body>
 
@@ -38,7 +38,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/index/"><strong>Archery</strong></a>
+            <a class="navbar-brand" href="/archery/index/"><strong>Archery</strong></a>
         </div>
 
         <!-- /.navbar-header -->
@@ -48,13 +48,13 @@
             </li>
             {% if todo > 0 %}
                 <li>
-                    <a href="/workflow/">
+                    <a href="/archery/workflow/">
                         <span class="fa fa-bell ">{{ todo }}</span>
                     </a>
                 </li>
             {% else %}
                 <li>
-                    <a href="/workflow/">
+                    <a href="/archery/workflow/">
                         <span class="fa fa-bell "></span>
                     </a>
                 </li>
@@ -67,14 +67,14 @@
                 <ul class="dropdown-menu dropdown-user">
                     {% if user.is_superuser %}
                         <li>
-                            <a target="_blank" href="/api/debug"><i class="fa fa-info fa-fw"></i> 系统信息</a>
+                            <a target="_blank" href="/archery/api/debug"><i class="fa fa-info fa-fw"></i> 系统信息</a>
                         </li>
                         <li>
                             <a target="_blank" href="/admin"><i class="fa fa-sitemap fa-fw"></i> 管理后台</a>
                         </li>
                     {% endif %}
-                    <li><a href="/admin/password_change/"><i class="fa fa-user fa-fw"></i> 修改密码</a></li>
-                    <li><a href="/logout/"><i class="fa fa-gear fa-fw"></i> 退出</a></li>
+                    <li><a href="/archery/admin/password_change/"><i class="fa fa-user fa-fw"></i> 修改密码</a></li>
+                    <li><a href="/archery/logout/"><i class="fa fa-gear fa-fw"></i> 退出</a></li>
                 </ul>
                 <!-- /.dropdown-user -->
             </li>
@@ -92,7 +92,7 @@
                 <ul class="nav" id="side-menu">
                     {% if perms.sql.menu_dashboard %}
                         <li>
-                            <a href="/dashboard/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/archery/dashboard/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                     {% endif %}
                     {% if perms.sql.menu_sqlcheck %}
@@ -101,12 +101,17 @@
                             <ul class="nav nav-second-level">
                                 {% if perms.sql.menu_sqlworkflow %}
                                     <li>
-                                        <a href="/sqlworkflow/">SQL上线</a>
+                                        <a href="/archery/sqlworkflow/">SQL上线</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_sqlanalyze %}
                                     <li>
-                                        <a href="/sqlanalyze/">SQL分析</a>
+                                        <a href="/archery/sqlanalyze/">SQL分析</a>
+                                    </li>
+                                {% endif %}
+                                {% if perms.sql.menu_sqlexport %}
+                                    <li>
+                                        <a href="/archery/sqlexport/">SQL导出</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -119,17 +124,17 @@
                             <ul class="nav nav-second-level">
                                 {% if perms.sql.menu_sqlquery %}
                                     <li>
-                                        <a href="/sqlquery/">在线查询</a>
+                                        <a href="/archery/sqlquery/">在线查询</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_data_dictionary %}
                                     <li>
-                                        <a href="/data_dictionary/">数据字典</a>
+                                        <a href="/archery/data_dictionary/">数据字典</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_queryapplylist %}
                                     <li>
-                                        <a href="/queryapplylist/">权限管理</a>
+                                        <a href="/archery/queryapplylist/">权限管理</a>
                                     </li>
                                 {% endif %}
 
@@ -143,12 +148,12 @@
                             <ul class="nav nav-second-level">
                                 {% if perms.sql.menu_sqladvisor %}
                                     <li>
-                                        <a href="/sqladvisor/">优化工具</a>
+                                        <a href="/archery/sqladvisor/">优化工具</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_slowquery %}
                                     <li>
-                                        <a href="/slowquery/">慢查日志</a>
+                                        <a href="/archery/slowquery/">慢查日志</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -161,28 +166,28 @@
                             <ul class="nav nav-second-level">
                                 {% if perms.sql.menu_instance_list %}
                                     <li>
-                                        <a href="/instance/">实例列表</a>
+                                        <a href="/archery/instance/">实例列表</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_dbdiagnostic %}
                                     <li>
-                                        <a href="/dbdiagnostic/">会话管理</a>
+                                        <a href="/archery/dbdiagnostic/">会话管理</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_database %}
                                     <li>
-                                        <a href="/database/">数据库管理</a>
+                                        <a href="/archery/database/">数据库管理</a>
                                     </li>
                                 {% endif %}
 
                                 {% if perms.sql.menu_instance_account %}
                                     <li>
-                                        <a href="/instanceaccount/">账号管理</a>
+                                        <a href="/archery/instanceaccount/">账号管理</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_param %}
                                     <li>
-                                        <a href="/instanceparam/">参数配置</a>
+                                        <a href="/archery/instanceparam/">参数配置</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -195,17 +200,17 @@
                             <ul class="nav nav-second-level">
                                 {% if perms.sql.menu_archive %}
                                     <li>
-                                        <a href="/archive/">PTArchiver</a>
+                                        <a href="/archery/archive/">PTArchiver</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_binlog2sql %}
                                     <li>
-                                        <a href="/binlog2sql/">Binlog2SQL</a>
+                                        <a href="/archery/binlog2sql/">Binlog2SQL</a>
                                     </li>
                                 {% endif %}
                                 {% if perms.sql.menu_schemasync %}
                                     <li>
-                                        <a href="/schemasync/">SchemaSync</a>
+                                        <a href="/archery/schemasync/">SchemaSync</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -217,10 +222,10 @@
                             <a href="#"><i class="fa fa-cogs fa-fw"></i> 系统管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/config/">配置项管理</a>
+                                    <a href="/archery/config/">配置项管理</a>
                                 </li>
                                 <li>
-                                    <a href="/group/">资源组管理</a>
+                                    <a href="/archery/group/">资源组管理</a>
                                 </li>
                                 <li>
                                     <a href="#">其他配置管理 <span class="fa arrow"></span></a>
@@ -243,7 +248,7 @@
                     {% endif %}
                     {% if perms.sql.menu_document %}
                         <li>
-                            <a href="/dbaprinciples/"><i class="fa fa-sitemap fa-fw"></i> 相关文档</a>
+                            <a href="/archery/dbaprinciples/"><i class="fa fa-sitemap fa-fw"></i> 相关文档</a>
                         </li>
                     {% endif %}
                 </ul>

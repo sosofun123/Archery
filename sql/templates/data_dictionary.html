@@ -3,7 +3,7 @@
 {% block content %}
     <!-- 自定义操作按钮-->
     <div class="form-group ">
-        <form action="/data_dictionary/export/">
+        <form action="/archery/data_dictionary/export/">
             <div id="toolbar" class="form-inline">
                 <div class="form-group">
                     <select id="instance_name" class="form-control selectpicker "
@@ -144,7 +144,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         db_type: ['mysql']
@@ -180,7 +180,7 @@
             $('#db_name').empty();
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -226,7 +226,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/data_dictionary/table_list/",
+                    url: "/archery/data_dictionary/table_list/",
                     dataType: "json",
                     data: {
                         instance_name: instance_name,
@@ -279,7 +279,7 @@
             // console.log(ins_name, db_name, tb_name);
             $.ajax({
                 type: "get",
-                url: "/data_dictionary/table_info/",
+                url: "/archery/data_dictionary/table_info/",
                 dataType: "json",
                 data: {
                     instance_name: ins_name,

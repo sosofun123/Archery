@@ -3,7 +3,7 @@
 {% block content %}
     <!-- 自定义操作按钮-->
     <div id="toolbar" class="btn-group">
-        <a type="button" class="btn btn-default" href="/queryuserprivileges/">
+        <a type="button" class="btn btn-default" href="/archery/queryuserprivileges/">
             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
             <span aria-hidden="true"></span>权限管理</a>
         <button id="btn_add" type="button" class="btn btn-default"
@@ -145,7 +145,7 @@
         $("#group_name").change(function () {
             $.ajax({
                 type: "post",
-                url: "/group/instances/",
+                url: "/archery/group/instances/",
                 dataType: "json",
                 data: {
                     group_name: $("#group_name").val(),
@@ -193,7 +193,7 @@
             });
             $.ajax({
                 type: "post",
-                url: "/group/auditors/",
+                url: "/archery/group/auditors/",
                 dataType: "json",
                 data: {
                     group_name: $("#group_name").val(),
@@ -239,7 +239,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/query/applylist/",
+                url: "/archery/query/applylist/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -303,10 +303,10 @@
                         var span = document.createElement('span');
                         span.setAttribute('title', value);
                         if (value.length > 10) {
-                            span.innerHTML = "<a href=\"/queryapplydetail/" + row.apply_id + "/\">" + value.substr(0, 10) + '...';
+                            span.innerHTML = "<a href=\"/archery/queryapplydetail/" + row.apply_id + "/\">" + value.substr(0, 10) + '...';
                             +"</a>";
                         } else {
-                            span.innerHTML = "<a href=\"/queryapplydetail/" + row.apply_id + "/\">" + value + "</a>";
+                            span.innerHTML = "<a href=\"/archery/queryapplydetail/" + row.apply_id + "/\">" + value + "</a>";
                         }
                         return span.outerHTML;
                     }
@@ -383,7 +383,7 @@
         $("#instance_name").change(function () {
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -432,7 +432,7 @@
         $("#db_name").change(function () {
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -559,7 +559,7 @@
                 //提交请求
                 $.ajax({
                     type: "post",
-                    url: "/query/applyforprivileges/",
+                    url: "/archery/query/applyforprivileges/",
                     dataType: "json",
                     data: {
                         title: title,
@@ -581,7 +581,7 @@
                     success: function (data) {
                         if (data.status === 0) {
                             $('#apply').modal('hide');
-                            location.href = '/queryapplylist/'
+                            location.href = '/archery/queryapplylist/'
                         } else {
                             alert(data.msg)
                         }
@@ -599,7 +599,7 @@
             var workflow_type = 1;
             $.ajax({
                 type: "post",
-                url: "/workflow/log/",
+                url: "/archery/workflow/log/",
                 dataType: "json",
                 data: {
                     workflow_id: workflow_id,

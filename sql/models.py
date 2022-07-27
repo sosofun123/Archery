@@ -676,6 +676,7 @@ class Permission(models.Model):
             ('menu_sqlcheck', '菜单 SQL审核'),
             ('menu_sqlworkflow', '菜单 SQL上线'),
             ('menu_sqlanalyze', '菜单 SQL分析'),
+            ('menu_sqlexport', '菜单 SQL导出'),
             ('menu_query', '菜单 SQL查询'),
             ('menu_sqlquery', '菜单 在线查询'),
             ('menu_queryapplylist', '菜单 权限管理'),
@@ -701,6 +702,9 @@ class Permission(models.Model):
             ('sql_workflow_change_group', 'SQL工单转移资源组'),
             ('sql_execute', '执行SQL上线工单(仅自己提交的)'),
             ('sql_analyze', '执行SQL分析'),
+            ('export_env_commit', '提交新增导出环境'),
+            ('export_workflow_list', '获取未导出/已导出列表'),
+            ('export_sql_export', '导出工单SQL'),
             ('optimize_sqladvisor', '执行SQLAdvisor'),
             ('optimize_sqltuning', '执行SQLTuning'),
             ('optimize_soar', '执行SOAR'),
@@ -854,3 +858,34 @@ class SlowQueryHistory(models.Model):
         index_together = ('hostname_max', 'ts_min')
         verbose_name = u'慢日志明细'
         verbose_name_plural = u'慢日志明细'
+
+
+class ExportEnv(models.Model):
+    """
+    导出环境
+    """
+    name = models.CharField('名称', max_length=50)
+    remarks = models.CharField('备注', max_length=500)
+    create_user = models.CharField('创建人', max_length=30)
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'export_env'
+        verbose_name = u'导出环境'
+        verbose_name_plural = u'导出环境'
+
+
+class ExportEnvWorkflow(models.Model):
+    """
+    导出环境工单
+    """
+    env_id = models.IntegerField('环境ID')
+    workflow_id = models.IntegerField('工单ID')
+
+    class Meta:
+        managed = True
+        db_table = 'export_env_workflow'
+        verbose_name = u'导出环境工单'
+        verbose_name_plural = u'导出环境工单'
+

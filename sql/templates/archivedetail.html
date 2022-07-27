@@ -244,14 +244,14 @@
             <textarea id="remark" name="remark" class="form-control" data-name="审核备注"
                       placeholder="请填写审核备注" rows=3></textarea>
             <br>
-            <form action="/archive/audit/" method="post" style="display:inline-block;">
+            <form action="/archery/archive/audit/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="archive_id" value="{{ archive_config.id }}">
                 <input type="hidden" id="audit_status" name="audit_status" value="1">
                 <input type="submit" id="btnPass" onclick="loading(this)" class="btn btn-success" value="审核通过"/>
             </form>
 
-            <form id="form-cancel" action="/archive/audit/" method="post" style="display:inline-block;">
+            <form id="form-cancel" action="/archery/archive/audit/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="archive_id" value="{{ archive_config.id }}">
                 <input type="hidden" id="audit_status" name="audit_status" value="2">
@@ -279,7 +279,7 @@
             // 修改状态
             $.ajax({
                 type: "post",
-                url: "/archive/switch/",
+                url: "/archery/archive/switch/",
                 dataType: "json",
                 data: {
                     "archive_id": "{{ archive_config.id }}",
@@ -313,7 +313,7 @@
             if (isContinue) {
                 $.ajax({
                     type: "get",
-                    url: "/archive/once/",
+                    url: "/archery/archive/once/",
                     dataType: "json",
                     data: {
                         archive_id: "{{ archive_config.id }}"
@@ -342,7 +342,7 @@
                 escape: true,
                 method: 'get',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/archive/log/",
+                url: "/archery/archive/log/",
                 striped: true,                      //是否显示行间隔色
                 cache: true,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）

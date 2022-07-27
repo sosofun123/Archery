@@ -59,7 +59,7 @@
                     </select>
                 </div>
                 <div class="panel-body">
-                    <form id="form-sqlquery" action="/sqlquery/" method="post" class="form-horizontal" role="form">
+                    <form id="form-sqlquery" action="/archery/sqlquery/" method="post" class="form-horizontal" role="form">
                         {% csrf_token %}
                         <div class="col-md-9 column">
                             <pre id="sql_content_editor" class="ace_editor " style="min-height:350px"></pre>
@@ -269,7 +269,7 @@
                 escape: true,
                 method: 'get',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/query/querylog/",
+                url: "/archery/query/querylog/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -420,7 +420,7 @@
             } else if ($("#alias").val()) {
                 $.ajax({
                     type: "post",
-                    url: "/query/favorite/",
+                    url: "/archery/query/favorite/",
                     dataType: "json",
                     data: {
                         query_log_id: $("#query_log_id").val(),
@@ -450,7 +450,7 @@
         function unstar(query_log_id) {
             $.ajax({
                 type: "post",
-                url: "/query/favorite/",
+                url: "/archery/query/favorite/",
                 dataType: "json",
                 data: {
                     query_log_id: query_log_id,
@@ -840,7 +840,7 @@
                         formatter: function (value, row, index) {
                             //staus为2的时候，增加申请链接
                             if (data.status === 2) {
-                                return value + "<a href=\"/queryapplylist/\">" + "（提交申请）" + "</a>"
+                                return value + "<a href=\"/archery/queryapplylist/\">" + "（提交申请）" + "</a>"
                             } else {
                                 return value
                             }
@@ -890,7 +890,7 @@
             //提交请求
             $.ajax({
                 type: "post",
-                url: "/query/",
+                url: "/archery/query/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -996,7 +996,7 @@
             //获取db_name
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 async: async,
                 data: {
@@ -1056,7 +1056,7 @@
             }
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -1110,7 +1110,7 @@
             //获取table
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -1146,7 +1146,7 @@
         $("#table_name").change(function () {
             $.ajax({
                 type: "post",
-                url: "/instance/describetable/",
+                url: "/archery/instance/describetable/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -1200,7 +1200,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         tag_codes: ['can_read']

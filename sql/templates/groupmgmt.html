@@ -2,7 +2,7 @@
 
 {% block content %}
     <ul class="breadcrumb">
-        <li><a href="/group/">资源组</a></li>
+        <li><a href="/archery/group/">资源组</a></li>
         <li class="active">关联对象</li>
     </ul>
     <!-- 自定义操作按钮-->
@@ -78,7 +78,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/group/relations/",
+                url: "/archery/group/relations/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -177,7 +177,7 @@
             var object_type = $("#object_type").val();
             $.ajax({
                 type: "post",
-                url: "/group/unassociated/",
+                url: "/archery/group/unassociated/",
                 dataType: "json",
                 data: {
                     group_id: group_id,
@@ -213,7 +213,7 @@
             if (group_id && object_type && object_info) {
                 $.ajax({
                     type: "post",
-                    url: "/group/addrelation/",
+                    url: "/archery/group/addrelation/",
                     dataType: "json",
                     data: {
                         group_id: group_id,

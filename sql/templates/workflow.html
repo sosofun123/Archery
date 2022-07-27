@@ -54,7 +54,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/workflow/list/",
+                url: "/archery/workflow/list/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -91,7 +91,7 @@
                     title: '申请标题',
                     field: 'workflow_title',
                     formatter: function (value, row, index) {
-                        return "<a href='/workflow/" + row.audit_id + "/'>" + value + "</a>";
+                        return "<a href='/archery/workflow/" + row.audit_id + "/'>" + value + "</a>";
                     }
                 }, {
                     title: '组',
@@ -120,7 +120,7 @@
                     formatter: function (value, row, index) {
                         // 当前审核人
                         return "<button class=\"btn btn-default btn-xs\" " +
-                            "onclick=\"javascrtpt:window.location.href='/workflow/" + row.audit_id + "/'\">" +
+                            "onclick=\"javascrtpt:window.location.href='/archery/workflow/" + row.audit_id + "/'\">" +
                             "审核</button>\n"
 
                     }
@@ -161,7 +161,7 @@
                 $('button[type=button]').prop('disabled', true);
                 $.ajax({
                     type: "post",
-                    url: "/workflowaudit/",
+                    url: "/archery/workflowaudit/",
                     dataType: "json",
                     data: {
                         audit_id: audit_id,
@@ -175,7 +175,7 @@
                     success: function (data) {
                         if (data.status == 0) {
                             $('#auditConfim').modal('hide');
-                            location.href = '/workflow/'
+                            location.href = '/archery/workflow/'
                         }
                         else {
                             alert(data.msg);

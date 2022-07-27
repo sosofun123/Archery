@@ -8,7 +8,7 @@
                     SQL上线
                 </div>
                 <div class="panel-body">
-                    <form id="form-submitsql" action="/autoreview/" method="post" class="form-horizontal" role="form">
+                    <form id="form-submitsql" action="/archery/autoreview/" method="post" class="form-horizontal" role="form">
                         {% csrf_token %}
                         <input type="hidden" id="workflow_id" name="workflow_id"/>
                         <div class="col-md-9 column">
@@ -270,7 +270,7 @@
             //将数据通过ajax提交给获取db_name
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -278,7 +278,7 @@
                 },
                 complete: function () {
                     var pathname = window.location.pathname;
-                    if (pathname === "/editsql/") {
+                    if (pathname === "/archery/editsql/") {
                         //填充库名
                         $("#db_name").selectpicker('val', sessionStorage.getItem('editDbname'));
                         if ($("#db_name").val()) {
@@ -312,7 +312,7 @@
             //将数据通过ajax提交给获取db_name
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -434,7 +434,7 @@
             //将数据通过ajax提交给后端进行检查
             $.ajax({
                 type: "post",
-                url: "/simplecheck/",
+                url: "/archery/simplecheck/",
                 dataType: "json",
                 data: {
                     sql_content: editor.getValue(),
@@ -579,7 +579,7 @@
         $("#group_name").change(function () {
             $.ajax({
                 type: "post",
-                url: "/group/instances/",
+                url: "/archery/group/instances/",
                 dataType: "json",
                 data: {
                     group_name: $("#group_name").val(),
@@ -587,7 +587,7 @@
                 },
                 complete: function () {
                     var pathname = window.location.pathname;
-                    if (pathname === "/editsql/") {
+                    if (pathname === "/archery/editsql/") {
                         //填充实例信息
                         $('#instance_name').selectpicker('val', sessionStorage.getItem('editClustername'));
                         if ($("#instance_name").val()) {
@@ -638,7 +638,7 @@
             });
             $.ajax({
                 type: "post",
-                url: "/group/auditors/",
+                url: "/archery/group/auditors/",
                 dataType: "json",
                 data: {
                     group_name: $("#group_name").val(),
@@ -673,7 +673,7 @@
             // 清空id, 只允许新增不允许修改
             sessionStorage.removeItem('editWorkflowDetailId');
             var pathname = window.location.pathname;
-            if (pathname == "/editsql/") {
+            if (pathname == "/archery/editsql/") {
                 $("#workflow_name").val(sessionStorage.getItem('editWorkflowNname'));
                 $("#demand_url").val(sessionStorage.getItem('editDemandUrl'));
                 $("#group_name").val(sessionStorage.getItem('editGroup'));
@@ -681,14 +681,14 @@
                 editor.setValue(sessionStorage.getItem('editSqlContent'));
                 editor.clearSelection();
                 $("#is_backup").val(sessionStorage.getItem('editIsbackup'));
-            } else if (pathname === "/submitotherinstance/") {
+            } else if (pathname === "/archery/submitotherinstance/") {
                 $("#workflow_name").val(sessionStorage.getItem('editWorkflowNname'));
                 $("#demand_url").val(sessionStorage.getItem('editDemandUrl'));
                 $("#group_name").val(sessionStorage.getItem('editGroup'));
                 editor.setValue(sessionStorage.getItem('editSqlContent'));
                 editor.clearSelection();
                 $("#is_backup").val(sessionStorage.getItem('editIsbackup'));
-            } else if (pathname === "/submitsql/") {
+            } else if (pathname === "/archery/submitsql/") {
                 //重置页面内容
                 editor.setValue("");
                 $(".selectpicker").selectpicker('val', '');

@@ -8,7 +8,7 @@
                     SQL优化工具
                 </div>
                 <div class="panel-body">
-                    <form id="form-sqladvisor" action="/sqladvisor/" method="post" class="form-horizontal" role="form">
+                    <form id="form-sqladvisor" action="/archery/sqladvisor/" method="post" class="form-horizontal" role="form">
                         {% csrf_token %}
                         <div class="col-md-9 column">
                             <pre id="sql_content_editor" class="ace_editor" style="min-height:400px"></pre>
@@ -366,7 +366,7 @@
             sessionStorage.setItem('sql_tuning_instance_name', $("#instance_name").val());
             $.ajax({
                 type: "get",
-                url: "/instance/instance_resource/",
+                url: "/archery/instance/instance_resource/",
                 dataType: "json",
                 data: {
                     instance_name: $("#instance_name").val(),
@@ -396,7 +396,7 @@
 
                         //适配从慢查询过来的优化请求
                         var pathname = window.location.pathname;
-                        if (pathname === "/slowquery_advisor/") {
+                        if (pathname === "/archery/slowquery_advisor/") {
                             $("#db_name").selectpicker('val', sessionStorage.getItem('advisor_db_name'));
                             sqladvisor();
                         }
@@ -419,7 +419,7 @@
             var columns = [];
             $.ajax({
                 type: "post",
-                url: "/slowquery/optimize_sqltuningadvisor/",
+                url: "/archery/slowquery/optimize_sqltuningadvisor/",
                 dataType: 'json',
                 data: {
                     sql_content: editor.getValue(),
@@ -490,7 +490,7 @@
             //将数据通过ajax提交给后端进行检查
             $.ajax({
                 type: "post",
-                url: "/slowquery/optimize_sqladvisor/",
+                url: "/archery/slowquery/optimize_sqladvisor/",
                 dataType: "json",
                 data: {
                     sql_content: sqlContent,
@@ -545,7 +545,7 @@
             }
             $.ajax({
                 type: "post",
-                url: "/query/explain/",
+                url: "/archery/query/explain/",
                 dataType: "json",
                 data: {
                     sql_content: prefix + editor.getValue(),
@@ -630,7 +630,7 @@
             //将数据通过ajax提交给后端进行检查
             $.ajax({
                 type: "post",
-                url: "/slowquery/optimize_soar/",
+                url: "/archery/slowquery/optimize_soar/",
                 dataType: "json",
                 data: {
                     instance_name: instance_name,
@@ -688,7 +688,7 @@
 
             $.ajax({
                 type: "post",
-                url: "/slowquery/optimize_sqltuning/",
+                url: "/archery/slowquery/optimize_sqltuning/",
                 dataType: "json",
                 data: {
                     sql_content: editor.getValue(),
@@ -995,7 +995,7 @@
             $(function () {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/archery/group/user_all_instances/",
                     dataType: "json",
                     data: {
                         db_type: ['mysql', 'oracle']

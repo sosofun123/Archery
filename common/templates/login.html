@@ -32,6 +32,7 @@
             </div>
             <div class="form-group">
                 <button class="btn btn-primary btn-block" id="btnLogin" type="button"><i class="fa-lock"></i>登录</button>
+                <!--<button class="btn btn-primary btn-block" id="sisLogin" type="button"><i class="fa-lock"></i>Sign in with SiS</button>-->
             </div>
             {% if sign_up_enabled %}
                 <div class="form-group">
@@ -162,6 +163,33 @@
         });
     });
 
+    $('#sisLogin').click(function () {
+        $.ajax({
+            type: "post",
+            url: "/archery/sislogin/",
+            dataType: "json",
+            data: {
+            },
+            complete: function () {
+                $('#sisLogin').removeClass('disabled');
+                $('#sisLogin').prop('disabled', false);
+            },
+            success: function (data) {
+<!--                if (data.status == 0) {-->
+<!--                    $(location).attr('href', '/index/');-->
+<!--                } else {-->
+<!--                    $('#wrongpwd-modal-body').html(data.msg);-->
+<!--                    $('#wrongpwd-modal').modal({-->
+<!--                        keyboard: true-->
+<!--                    });-->
+<!--                }-->
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
+
     $('#btnLogin').click(function () {
         $('#btnLogin').addClass('disabled');
         $('#btnLogin').prop('disabled', true);
@@ -175,7 +203,7 @@
         $('#btnSign').prop('disabled', true);
         $.ajax({
             type: "post",
-            url: "/signup/",
+            url: "/archery/signup/",
             dataType: "json",
             data: {
                 username: $("#username").val(),
@@ -205,7 +233,7 @@
     function authenticateUser(username, password) {
         $.ajax({
             type: "post",
-            url: "/authenticate/",
+            url: "/archery/authenticate/",
             dataType: "json",
             data: {
                 username: username,
@@ -217,7 +245,7 @@
             },
             success: function (data) {
                 if (data.status == 0) {
-                    $(location).attr('href', '/index/');
+                    $(location).attr('href', '/archery/index/');
                 } else {
                     $('#wrongpwd-modal-body').html(data.msg);
                     $('#wrongpwd-modal').modal({

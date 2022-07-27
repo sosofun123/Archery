@@ -1,8 +1,8 @@
 //初始化ace编辑器对象
 var editor = ace.edit("sql_content_editor");
-ace.config.set('basePath', '/static/ace');
-ace.config.set('modePath', '/static/ace');
-ace.config.set('themePath', '/static/ace');
+ace.config.set('basePath', '/archery/static/ace');
+ace.config.set('modePath', '/archery/static/ace');
+ace.config.set('themePath', '/archery/static/ace');
 
 //设置风格和语言（更多风格和语言，请到github上相应目录查看）
 var theme = "textmate";
@@ -39,7 +39,7 @@ editor.commands.addCommand({
     bindKey: {win: "Ctrl-Enter", mac: "Command-Enter"},
     exec: function (editor) {
         let pathname = window.location.pathname;
-        if (pathname === "/sqlquery/") {
+        if (pathname === "/archery/sqlquery/") {
             sqlquery();
         }
     }
@@ -130,7 +130,7 @@ function setColumnsCompleteData(result) {
     } else {
         $.ajax({
             type: "get",
-            url: "/instance/instance_resource/",
+            url: "/archery/instance/instance_resource/",
             dataType: "json",
             data: {
                 instance_name: $("#instance_name").val(),
@@ -171,7 +171,7 @@ $("#instance_name").change(function () {
         editor.session.setMode("ace/mode/" + "mysql");
         // 提示信息
         let pathname = window.location.pathname;
-        if (pathname === "/submitsql/" && !editor.getValue()) {
+        if (pathname === "/archery/submitsql/" && !editor.getValue()) {
             editor.setValue("-- 请在此输入SQL，以分号结尾，仅支持DML和DDL语句，查询语句请使用SQL查询功能。\n");
             editor.clearSelection();
             editor.focus();  //获取焦点
@@ -187,7 +187,7 @@ $("#instance_name").change(function () {
         });
         // 提示信息
         let pathname = window.location.pathname;
-        if (pathname === "/submitsql/" && !editor.getValue()) {
+        if (pathname === "/archery/submitsql/" && !editor.getValue()) {
             editor.setValue("请在此输入命令，多个命令请换行填写，在提交时请删除此行说明");
             editor.focus();  //获取焦点
         }

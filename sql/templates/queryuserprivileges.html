@@ -2,7 +2,7 @@
 
 {% block content %}
     <ul class="breadcrumb">
-        <li><a href="/queryapplylist/">申请列表</a></li>
+        <li><a href="/archery/queryapplylist/">申请列表</a></li>
         <li class="active">权限管理</li>
     </ul>
     <!-- 自定义操作按钮-->
@@ -91,7 +91,7 @@
                 escape: true,
                 method: 'post',
                 contentType: "application/x-www-form-urlencoded",
-                url: "/query/userprivileges/",
+                url: "/archery/query/userprivileges/",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -212,7 +212,7 @@
                 $('button[type=button]').prop('disabled', true);
                 $.ajax({
                     type: "post",
-                    url: "/query/modifyprivileges/",
+                    url: "/archery/query/modifyprivileges/",
                     dataType: "json",
                     data: {
                         type: type,

@@ -101,7 +101,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/db_diagnostic/process/",
+                    url: "/archery/db_diagnostic/process/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
@@ -221,7 +221,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/db_diagnostic/tablesapce/",
+                    url: "/archery/db_diagnostic/tablesapce/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
@@ -317,7 +317,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/db_diagnostic/innodb_trx/",
+                    url: "/archery/db_diagnostic/innodb_trx/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
@@ -451,7 +451,7 @@
                     escape: true,
                     method: 'post',
                     contentType: "application/x-www-form-urlencoded",
-                    url: "/db_diagnostic/trxandlocks/",
+                    url: "/archery/db_diagnostic/trxandlocks/",
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
@@ -565,7 +565,7 @@
                     //发送请求构造会话数据
                     $.ajax({
                         type: "post",
-                        url: "/db_diagnostic/create_kill_session/",
+                        url: "/archery/db_diagnostic/create_kill_session/",
                         dataType: "json",
                         data: {
                             instance_name: instance_name,
@@ -609,7 +609,7 @@
                     //发送请求构造会话数据
                     $.ajax({
                         type: "post",
-                        url: "/db_diagnostic/kill_session/",
+                        url: "/archery/db_diagnostic/kill_session/",
                         dataType: "json",
                         data: {
                             instance_name: instance_name,
@@ -641,7 +641,7 @@
                 $(function () {
                     $.ajax({
                         type: "get",
-                        url: "/group/user_all_instances/",
+                        url: "/archery/group/user_all_instances/",
                         dataType: "json",
                         data: {
                             db_type: ['mysql']
